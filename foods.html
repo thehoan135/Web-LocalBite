@@ -1,0 +1,153 @@
+<!-- Page Header -->
+<header class="page-header">
+  <div class="header-container">
+    <div class="header-left">
+      <h1>Quản lý món ăn</h1>
+      <p>Thêm, chỉnh sửa hoặc xóa món ăn trong danh sách</p>
+    </div>
+    <button class="add-btn" (click)="isAdding = true">
+      <i class="bi bi-plus-circle"></i> Thêm món
+    </button>
+  </div>
+</header>
+
+<!-- Filter Section -->
+<section class="filter-section">
+  <div class="filter-container">
+    <div class="search-box">
+      <i class="bi bi-search"></i>
+      <input
+        type="text"
+        placeholder="Tìm kiếm món ăn..."
+        [(ngModel)]="searchTerm"
+      />
+    </div>
+  </div>
+</section>
+
+<!-- Foods Section -->
+<section class="foods-section">
+  <div class="foods-container">
+    <div class="food-card" *ngFor="let food of foods | slice:0">
+      <div class="food-image">
+        <img [src]="food.img" [alt]="food.name" />
+        <span
+          class="status-badge"
+          [ngClass]="food.status === 'available' ? 'active' : 'inactive'"
+        >
+          {{ getStatusLabel(food) }}
+        </span>
+      </div>
+
+      <div class="food-content">
+        <h3>{{ food.name }}</h3>
+        <div class="food-info">
+          <span class="category">{{ food.category }}</span>
+          <span class="region">{{ food.regionTag }}</span>
+        </div>
+        <div class="food-footer">
+          <div class="price-group">
+            <span class="price">{{ food.price | number: '1.0-0' }}đ</span>
+          </div>
+          <div class="action-buttons">
+            <button class="btn-edit" (click)="editFood(food)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn-delete" (click)="deleteFood(food.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Modal: Add/Edit -->
+<div class="modal" *ngIf="isAdding || selectedFood">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>{{ selectedFood ? 'Chỉnh sửa món ăn' : 'Thêm món ăn mới' }}</h2>
+      <button class="close-btn" (click)="isAdding = false; selectedFood = null">
+        <i class="bi bi-x"></i>
+      </button>
+    </div>
+
+    <div class="modal-body">
+      <form class="food-form">
+        <div class="form-group">
+          <label>Tên món <span class="required">*</span></label>
+          <input
+            type="text"
+            [(ngModel)]="(selectedFood || newFood).name"
+            name="name"
+          />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Giá (VNĐ) <span class="required">*</span></label>
+            <input
+              type="number"
+              [(ngModel)]="(selectedFood || newFood).price"
+              name="price"
+            />
+          </div>
+          <div class="form-group">
+            <label>Danh mục</label>
+            <input
+              type="text"
+              [(ngModel)]="(selectedFood || newFood).category"
+              name="category"
+              placeholder="Món chính, nước uống, ..."
+            />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Khu vực</label>
+          <input
+            type="text"
+            [(ngModel)]="(selectedFood || newFood).regionTag"
+            name="regionTag"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Hình ảnh (URL)</label>
+          <input
+            type="text"
+            [(ngModel)]="(selectedFood || newFood).img"
+            name="img"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Trạng thái</label>
+          <select
+            [(ngModel)]="(selectedFood || newFood).status"
+            name="status"
+          >
+            <option value="available">Đang bán</option>
+            <option value="unavailable">Ngừng bán</option>
+          </select>
+        </div>
+      </form>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        class="btn-cancel"
+        (click)="isAdding = false; selectedFood = null"
+      >
+        Hủy
+      </button>
+      <button
+        class="btn-save"
+        (click)="selectedFood ? saveEditedFood() : addFood()"
+      >
+        Lưu
+      </button>
+    </div>
+  </div>
+</div>

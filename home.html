@@ -1,0 +1,62 @@
+<!-- Banner -->
+<section class="banner">
+  <img [src]="homeData.banner.image" [alt]="homeData.banner.alt">
+</section>
+
+<!-- Delivery Location Section -->
+<section class="delivery-section">
+  <h2>Where should we deliver your food today?</h2>
+  <div class="location-input">
+    <div class="input-wrapper">
+      <i class="bi bi-geo-alt-fill"></i>
+      <input type="text" placeholder="Nhập địa chỉ giao hàng của bạn...">
+    </div>
+    <button class="search-btn" type="button">
+      <span>Tìm kiếm</span>
+    </button>
+  </div>
+</section>
+
+<!-- Region Cards -->
+<section class="region-section">
+  <div class="region-cards">
+    <div class="region-card" *ngFor="let region of homeData.regions">
+      <div class="region-image">
+        <img [src]="region.image" [alt]="region.name">
+      </div>
+      <h3>{{ region.name }}</h3>
+      <a class="view-btn" [routerLink]="['/products', region.id]">Xem món</a>
+    </div>
+  </div>
+</section>
+
+<!-- Suggestions Section -->
+<section class="suggestions">
+  <h2>Gợi ý món ăn dành cho bạn</h2>
+  <div class="food-cards">
+    <div class="food-card" *ngFor="let food of homeData.suggestions" [routerLink]="['/product', food.id]">
+      <div class="food-image">
+        <img [src]="food.image" [alt]="food.name">
+        <div class="food-overlay">
+          <div class="food-info">
+            <h4>{{ food.name }}</h4>
+            <div class="food-details">
+              <span class="price">{{ formatPrice(food.price) }}</span>
+              <span class="rating">
+                <i class="bi bi-star-fill"></i> {{ food.rating }}
+              </span>
+            </div>
+            <div class="discount" *ngIf="food.discount > 0">
+              Giảm {{ food.discount * 100 }}%
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="see-more">
+    <a class="see-more-btn" routerLink="/products">
+      <span>See more</span>
+    </a>
+  </div>
+</section>
